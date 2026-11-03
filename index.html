@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier vente Bio par Nature</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Public+Sans:wght@400;600;650;700&display=swap">
+<style>
+:root{
+  --bg:#f5f3ec;--surface:#ffffff;--surface-2:#faf8f3;
+  --fg:#1b2a30;--muted:#5d6f76;--line:#e4e0d6;
+  --accent:#00a8b0;--accent-strong:#0a6b70;--accent-soft:#e3f4f5;
+  --good:#2e9e6b;--good-soft:#e6f4ec;--bad:#cf584f;--bad-soft:#fae9e7;
+  --radius:14px;
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1a1e;--surface:#16252b;--surface-2:#132025;
+  --fg:#eaf2f3;--muted:#a1b4ba;--line:#26393f;
+  --accent:#36c3ca;--accent-strong:#8fe3e8;--accent-soft:#143338;
+  --good:#4cbf87;--good-soft:#123528;--bad:#e5837b;--bad-soft:#3a1f1d;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.55;
+  -webkit-font-smoothing:antialiased;font-size:16px}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{max-width:720px;margin:0 auto;padding:28px max(18px,env(safe-area-inset-left,0px)) 64px}
+header.top{margin-bottom:22px}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strong);font-weight:700}
+h1{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,5vw,2.7rem);line-height:1.08;margin:.35rem 0 .5rem;text-wrap:balance}
+.lede{color:var(--muted);font-size:1.02rem;max-width:58ch}
+.namebar{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.namebar label{font-size:.9rem;color:var(--muted);font-weight:600}
+input[type=text]{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--fg);min-width:200px;flex:1}
+input[type=text]:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-top:20px;min-width:0}
+.card .tag{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-strong);font-weight:700}
+.card h2{font-family:var(--display);font-weight:600;font-size:1.3rem;margin:.3rem 0 .6rem;line-height:1.15;text-wrap:balance}
+.scenario{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:8px;padding:12px 14px;margin:10px 0 14px;font-size:.97rem}
+.q{font-weight:650;margin:6px 0 12px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;font:inherit;color:var(--fg);background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:12px 13px;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt .ltr{flex:none;width:26px;height:26px;border-radius:7px;background:var(--accent);color:#fff;font-weight:700;display:grid;place-items:center;font-size:.85rem}
+.opt.correct{background:var(--good-soft);border-color:var(--good)}
+.opt.correct .ltr{background:var(--good)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.opt.wrong .ltr{background:var(--bad)}
+.explain{margin-top:12px;font-size:.94rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:11px}
+.rows{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.row .stmt{flex:1;min-width:180px;font-size:.96rem}
+.pick{display:flex;gap:6px;flex:none}
+.pick button{font:inherit;font-size:.85rem;font-weight:650;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.pick button.sel-ok{background:var(--good);border-color:var(--good);color:#fff}
+.pick button.sel-no{background:var(--bad);border-color:var(--bad);color:#fff}
+.pick button:disabled{cursor:default;opacity:.85}
+textarea{font:inherit;width:100%;min-height:92px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--surface-2);color:var(--fg);resize:vertical}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:11px;align-items:center}
+button.primary{font:inherit;font-weight:650;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer}
+button.primary:hover:not(:disabled){background:var(--accent-strong)}
+button.primary:disabled{opacity:.6;cursor:default}
+button.ghost{font:inherit;font-weight:600;background:transparent;color:var(--accent-strong);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
+.fb{margin-top:12px;background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:9px;padding:12px 14px;font-size:.95rem;white-space:pre-wrap}
+.fb.thinking{color:var(--muted);font-style:italic}
+.hint{font-size:.88rem;color:var(--muted);margin-top:6px}
+footer.foot{margin-top:30px;border-top:1px solid var(--line);padding-top:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.note{font-size:.84rem;color:var(--muted);margin-top:14px;line-height:1.5}
+.sr{position:absolute;left:-9999px}
+@media (max-width:420px){.card{padding:17px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Atelier distance client</div>
+    <h1>S'entraîner à la posture du coach de décision</h1>
+    <p class="lede">Quelques exercices à faire en direct. Pour les réponses écrites, tu reçois un retour immédiat. Il n'y a pas de piège : on travaille la posture, pas la bonne récitation.</p>
+    <div class="namebar">
+      <label for="who">Ton prénom (facultatif)</label>
+      <input type="text" id="who" placeholder="Pour retrouver tes réponses" autocomplete="off">
+    </div>
+  </header>
+
+  <main id="exos"></main>
+
+  <section class="card">
+    <div class="tag">Exercice ouvert · 3</div>
+    <h2>Réécrire une réponse de vendeur en commerçant</h2>
+    <p>Une cheffe de rayon : « Vous êtes 18 % au-dessus de Jardin Bio sur le biscuit. À ce prix, je ne peux pas. » Le vendeur défend son prix et finit par lâcher une remise. Écris une ouverture de commerçant : tu ne défends pas le prix, tu cherches quel « C » lui manque (clarté, choix ou confiance) et tu l'aides à décider.</p>
+    <textarea id="ta-rewrite" placeholder="Ta réponse à la cheffe de rayon…"></textarea>
+    <div class="actions"><button class="primary" data-eval="rewrite" data-ta="ta-rewrite">Évaluer ma réponse</button></div>
+    <div class="fb" id="fb-rewrite" hidden></div>
+  </section>
+
+  <footer class="foot">
+    <button class="ghost" id="copyBtn">Copier toutes mes réponses</button>
+    <span class="hint" id="copyMsg"></span>
+  </footer>
+  <p class="note" id="aiNote"></p>
+  <textarea class="sr" id="clip" aria-hidden="true" tabindex="-1"></textarea>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — colle ici l'URL de ton proxy (Worker Cloudflare, etc.)
+   Exemple : "https://atelier-bio.ton-sous-domaine.workers.dev"
+   Laisse "" pour que la page affiche seulement les repères.
+   Ne mets JAMAIS ta clé API ici : elle reste dans le proxy.
+   ============================================================ */
+const API_ENDPOINT = "";
+
+/* ---------- content ---------- */
+const MCQ = [
+  { id:"posture", tag:"QCM · 1", title:"Mettons la posture à l'épreuve",
+    scenario:"Vous présentez votre offre à l'acheteuse d'une enseigne, un référencement travaillé depuis deux mois. Quand vous arrivez sur la nouvelle gamme, elle vous coupe : « Franchement ? On a déjà essayé un truc similaire il y a trois ans avec un autre fournisseur, ça a été une catastrophe. »",
+    q:"Quelle réaction incarne le mieux l'état d'esprit « je ne sais pas » ?",
+    options:[
+      "« Je comprends, mais le marché a énormément changé en trois ans. Laissez-moi vous montrer ce qui rend ma gamme différente. »",
+      "« Pas de problème, on laisse cette gamme de côté et on regarde le reste du linéaire. »",
+      "« On dirait que cette expérience vous a marquée. Avant que je dise quoi que ce soit sur ma gamme, je ne sais pas ce qui s'est passé à l'époque. Vous me racontez ? »",
+      "« Beaucoup de mes clients disaient exactement la même chose au début, et aujourd'hui ils sont ravis. »"],
+    answer:2,
+    explain:"La c est la seule qui suspend le pitch et va chercher la réalité du client avant de parler de soi. a et d repartent en mode convaincre, b fuit le sujet au lieu de le comprendre." },
+  { id:"demain", tag:"QCM · 2", title:"Demain, 9h00",
+    scenario:"Un prospect que vous courez depuis des mois ouvre enfin la porte : « On n'est pas satisfaits de notre fournisseur actuel. » Votre cerveau produit aussitôt trois explications : le prix, le service, la livraison.",
+    q:"Que vous invite à faire d'abord l'état d'esprit « je ne sais pas » ?",
+    options:[
+      "Choisir l'explication la plus probable et construire le pitch autour.",
+      "Traiter les trois comme des hypothèses, et rester curieux de ce que « pas satisfaits » veut dire dans son monde.",
+      "Éviter de poser trop de questions, arriver vite au pitch.",
+      "Présenter toute l'offre maintenant, la porte a mis des mois à s'ouvrir."],
+    answer:1,
+    explain:"Vos trois explications sont des suppositions, pas des faits. La b les garde comme hypothèses et va chercher le sens réel de « pas satisfaits » chez ce client précis." }
+];
+const CLASSIFY = { tag:"Tri · fait ou supposition", title:"Fait ou supposition ?",
+  lead:"Le client dit : « Il faut que ça bouge vite sur cette catégorie. » Pour chaque phrase, est-ce un fait qu'il a dit, ou une supposition de votre part ?",
+  items:[
+    {t:"Le client a dit qu'il faut aller vite.", fact:true},
+    {t:"Son budget est déjà validé.", fact:false},
+    {t:"La vitesse compte plus que le prix pour lui.", fact:false},
+    {t:"Il choisira le fournisseur qui répond le premier.", fact:false}] };
+const OPEN = [
+  { id:"monter", tag:"Exercice ouvert · 1", title:"Faire monter la question",
+    body:"Voici une question factuelle : « Quel est votre budget ? ». Transforme-la en question de sens, qui va chercher l'enjeu, la priorité ou le résultat espéré du client plutôt qu'un chiffre.",
+    ph:"Ta question de sens…" },
+  { id:"decoder", tag:"Exercice ouvert · 2", title:"Décoder l'objection",
+    body:"Le chef de rayon dit : « Je n'ai pas de place. » Au lieu de la prendre au premier degré, écris deux ou trois questions qui vont chercher l'enjeu réel derrière cette phrase.",
+    ph:"Tes questions pour décoder…" }
+];
+const REPERES = {
+  monter:"Une bonne question de sens ouvre sur l'enjeu ou le résultat espéré, pas sur un chiffre. Par exemple : « Qu'est-ce qui ferait de ce référencement un bon pari à vos yeux ? »",
+  decoder:"De bonnes questions vont sous « je n'ai pas de place » : comment vous décidez d'intégrer un nouveau produit, comment vous ouvrez de la place, quel produit vous auriez aimé remplacer pour en créer.",
+  rewrite:"Une réponse de commerçant ne défend pas le prix, elle cherche le C qui manque. Par exemple : « Qu'est-ce qui fait, pour vous, qu'un produit mérite sa place ici ? Et si on regardait la marge au mètre linéaire plutôt que le prix unitaire ? »"
+};
+function prompt(ex, ans){
+  const base="Tu es le formateur d'un atelier de vente en grande distribution bio. Un participant, chef des ventes, s'entraîne. Réponds en français, tutoie-le, 3 à 4 phrases maximum, chaleureux et direct. Dis d'abord ce qui est réussi, puis un cran plus loin si besoin. Ne réécris pas tout à sa place ; si sa réponse est hors sujet, propose un seul exemple court.";
+  if(ex==="monter") return base+"\n\nExercice : transformer la question factuelle « Quel est votre budget ? » en question de sens, qui cherche l'enjeu, la priorité ou le résultat espéré du client, pas un chiffre.\n\nSa réponse : « "+ans+" »\n\nÉvalue si sa question ouvre bien sur le sens plutôt que sur un fait.";
+  if(ex==="decoder") return base+"\n\nExercice : face à l'objection « Je n'ai pas de place », écrire des questions qui révèlent l'enjeu réel au lieu de la prendre au premier degré. Les bonnes questions cherchent comment le client décide d'intégrer un produit, d'ouvrir de la place, quel produit il remplacerait.\n\nSes questions : « "+ans+" »\n\nÉvalue si ses questions décodent l'objection au lieu d'argumenter.";
+  if(ex==="rewrite") return base+"\n\nExercice : une cheffe de rayon dit « Vous êtes 18 % au-dessus de Jardin Bio, à ce prix je ne peux pas. » Écrire une ouverture de commerçant qui ne défend pas le prix mais cherche le C qui manque (clarté, choix, confiance) et aide à décider. Rappel : défendre le prix ou lâcher une remise, c'est le réflexe vendeur à éviter.\n\nSa réponse : « "+ans+" »\n\nÉvalue si elle sort du réflexe de défense du prix et ouvre vers le sens.";
+  return base+"\n\nRéponse du participant : « "+ans+" »";
+}
+
+/* ---------- render ---------- */
+const exRoot=document.getElementById("exos");
+function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+const letters=["a","b","c","d","e"];
+MCQ.forEach(m=>{
+  const c=el("section","card");
+  c.appendChild(el("div","tag",m.tag));
+  c.appendChild(el("h2",null,m.title));
+  c.appendChild(el("div","scenario",m.scenario));
+  c.appendChild(el("div","q",m.q));
+  const opts=el("div","opts");
+  m._picked=null;
+  m.options.forEach((o,i)=>{
+    const b=el("button","opt");b.type="button";
+    b.innerHTML='<span class="ltr">'+letters[i]+'</span><span>'+o+'</span>';
+    b.onclick=()=>{ if(m._picked!=null)return; m._picked=i;
+      [...opts.children].forEach((bb,j)=>{bb.disabled=true;
+        if(j===m.answer)bb.classList.add("correct"); else if(j===i)bb.classList.add("wrong");});
+      exp.hidden=false; };
+    opts.appendChild(b);
+  });
+  c.appendChild(opts);
+  const exp=el("div","explain",letters[m.answer]+". "+m.explain);exp.hidden=true;
+  c.appendChild(exp);
+  exRoot.appendChild(c);
+});
+(function(){
+  const m=CLASSIFY, c=el("section","card");
+  c.appendChild(el("div","tag",m.tag));c.appendChild(el("h2",null,m.title));
+  c.appendChild(el("div","scenario",m.lead));
+  const rows=el("div","rows");
+  m.items.forEach(it=>{
+    const r=el("div","row");r.appendChild(el("div","stmt",it.t));
+    const pick=el("div","pick");
+    const bf=el("button",null,"Fait"),bs=el("button",null,"Supposition");
+    bf.type="button";bs.type="button";it._picked=null;
+    function choose(isFact,btn){ if(it._picked!=null)return; it._picked=isFact;
+      const right=(isFact===it.fact); btn.className=right?"sel-ok":"sel-no";
+      bf.disabled=true;bs.disabled=true; if(!right){(it.fact?bf:bs).className="sel-ok";} }
+    bf.onclick=()=>choose(true,bf);bs.onclick=()=>choose(false,bs);
+    pick.appendChild(bf);pick.appendChild(bs);r.appendChild(pick);rows.appendChild(r);
+  });
+  c.appendChild(rows);
+  c.appendChild(el("div","hint","Un seul des quatre est un fait : ce que le client a réellement dit."));
+  exRoot.appendChild(c);
+})();
+OPEN.forEach(o=>{
+  const c=el("section","card");
+  c.appendChild(el("div","tag",o.tag));c.appendChild(el("h2",null,o.title));
+  c.appendChild(el("p",null,o.body));
+  const ta=el("textarea");ta.id="ta-"+o.id;ta.placeholder=o.ph;c.appendChild(ta);
+  const act=el("div","actions");
+  const b=el("button","primary","Évaluer ma réponse");b.type="button";b.dataset.eval=o.id;b.dataset.ta="ta-"+o.id;
+  act.appendChild(b);c.appendChild(act);
+  const fb=el("div","fb");fb.id="fb-"+o.id;fb.hidden=true;c.appendChild(fb);
+  exRoot.appendChild(c);
+});
+
+/* ---------- evaluation via proxy ---------- */
+function revealReperes(id,fb,prefix){ fb.hidden=false;fb.className="fb";
+  fb.textContent=(prefix||"Repères :\n\n")+REPERES[id]; }
+async function evaluate(id,taId,btn){
+  const ta=document.getElementById(taId), fb=document.getElementById("fb-"+id);
+  const ans=(ta.value||"").trim();
+  fb.hidden=false;fb.className="fb";
+  if(!ans){ fb.textContent="Écris d'abord ta réponse."; return; }
+  if(!API_ENDPOINT){ revealReperes(id,fb,"L'évaluation IA n'est pas configurée. Repères :\n\n"); return; }
+  btn.disabled=true;fb.className="fb thinking";fb.textContent="Réflexion…";
+  try{
+    const r=await fetch(API_ENDPOINT,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({prompt:prompt(id,ans)})});
+    if(!r.ok){ throw new Error("http "+r.status); }
+    const data=await r.json();
+    const text=((data&&data.text)||"").trim();
+    if(!text) throw new Error("réponse vide");
+    fb.className="fb";fb.textContent=text;
+  }catch(e){
+    fb.className="fb";fb.textContent="L'évaluation n'a pas abouti ("+(e.message||"erreur")+"). Repères :\n\n"+REPERES[id];
+  }finally{ btn.disabled=false; }
+}
+document.addEventListener("click",ev=>{ const b=ev.target.closest("[data-eval]"); if(b) evaluate(b.dataset.eval,b.dataset.ta,b); });
+
+/* ---------- copy answers ---------- */
+function gather(){
+  const who=(document.getElementById("who").value||"").trim();
+  let out="Réponses atelier vente"+(who?(" — "+who):"")+"\n\n";
+  MCQ.forEach((m,i)=>{ out+="QCM "+(i+1)+" ("+m.title+") : "+(m._picked==null?"—":letters[m._picked]+(m._picked===m.answer?" (juste)":" (à revoir)"))+"\n"; });
+  out+="\nFait ou supposition : "+CLASSIFY.items.map((it,i)=>"#"+(i+1)+(it._picked==null?"—":(it._picked===it.fact?"ok":"x"))).join("  ")+"\n\n";
+  [["monter","Faire monter la question"],["decoder","Décoder l'objection"],["rewrite","Réécrire en commerçant"]].forEach(([id,label])=>{
+    const ta=document.getElementById("ta-"+id); out+=label+" :\n"+((ta&&ta.value.trim())||"—")+"\n\n"; });
+  return out.trim();
+}
+document.getElementById("copyBtn").onclick=async()=>{
+  const txt=gather(), msg=document.getElementById("copyMsg");
+  try{ await navigator.clipboard.writeText(txt); msg.textContent="Copié. Colle-les où tu veux."; }
+  catch(e){ const clip=document.getElementById("clip"); clip.value=txt; clip.classList.remove("sr"); clip.style.position="static"; clip.focus(); clip.select(); msg.textContent="Sélectionné : fais Cmd/Ctrl+C pour copier."; }
+};
+document.getElementById("aiNote").textContent = API_ENDPOINT
+  ? "Le retour écrit est généré par l'IA via le service du formateur, aucun compte requis de ton côté."
+  : "L'évaluation IA n'est pas encore configurée : chaque exercice écrit affiche ses repères. Tu peux copier tes réponses et les transmettre au formateur.";
+</script>
+</body>
+</html>
